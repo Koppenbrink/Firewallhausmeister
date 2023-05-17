@@ -1,5 +1,5 @@
 from config import load_config
 
-version = 1.2
-prefix = 'AAA '
+version = 2.0
+praefix = 'AAA'
 config = load_config()
