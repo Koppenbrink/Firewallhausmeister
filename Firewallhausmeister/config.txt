@@ -1,1 +1,1 @@
-{"direction": "out", "prefix": "ABC"}
+{"direction": "both", "prefix": "ABC"}
