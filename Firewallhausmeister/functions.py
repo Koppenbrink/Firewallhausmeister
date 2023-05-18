@@ -68,27 +68,38 @@ def set_rule(file_path:str, action:str, direction:str) -> str:
     return True
 
 
-def create_command_for_deleting_rule(entry):
+def create_command_for_deleting_rules(list_of_entries):
     commands = ''
-    if entry[2] == 'both':
-        for direction in ['in', 'out']:
-            rule_name =f'{entry[5]} {entry[0]} {direction} Firewallhausmeister'
-            commands = commands + f'netsh advfirewall firewall delete rule name ="{rule_name}" && '
-        commands = commands[:-4]
-    else:
-        rule_name = f'{entry[5]} {entry[0]} {entry[2]} Firewallhausmeister'
-        commands = commands + f'netsh advfirewall firewall delete rule name ="{rule_name}"'
+    for entry in list_of_entries:
+        if entry[2] == 'both':
+            for direction in ['in', 'out']:
+                rule_name =f'{entry[5]} {entry[0]} {direction} Firewallhausmeister'
+                commands = commands + f'netsh advfirewall firewall delete rule name = "{rule_name}" && '
+        else:
+            rule_name = f'{entry[5]} {entry[0]} {entry[2]} Firewallhausmeister'
+            commands = commands + f'netsh advfirewall firewall delete rule name = "{rule_name}" && '
+    commands = commands[:-4]
     return commands
 
-def delete_rule(entry):
+def delete_rules(list_of_idxes):
+    if not list_of_idxes:
+        pass
+
     import win32comext.shell.shell as shell
-    commands = create_command_for_deleting_rule(entry)
-    print(commands)
+    database = _load_database()
+
+    list_of_entries = [database[x] for x in list_of_idxes]
+
+    commands = create_command_for_deleting_rules(list_of_entries)
+    database = _load_database()
+
     shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+commands)
+
+    # write new database to file
+    _write_database([database[x] for x in range(len(database)) if x not in list_of_idxes])
 
 def _is_exe(path):
     import os
-    print(path)
     return os.path.isfile(path) and os.access(path, os.X_OK)
 
 def _load_database(check=False):
