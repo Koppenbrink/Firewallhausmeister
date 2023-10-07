@@ -1,6 +1,17 @@
 from helper import config
+import sys,os
+from config import *
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
 
-prefix = config['prefix']
+    return os.path.join(base_path, relative_path)
+
+csv_database = resource_path('list_of_rules.csv')
 
 def extract_exe_name(file_path:str) -> str:
     '''
@@ -28,7 +39,7 @@ def create_entry_for_rule(exe_name:str, file_path:str, action:str, direction:str
     :param rule_name:
     :return:
     '''
-    with  open('./resources/list_of_rules.csv','a') as f:
+    with  open(csv_database,'a') as f:
         f.write(f'{exe_name},{action},{direction},NaN,{file_path},{rule_name}\n')
     return True
 
@@ -41,15 +52,16 @@ def create_command_for_firewall_rule(file_path:str, action:str, direction:str) -
     :return: the command to set the rule
     '''
     commands = ''
+
     exe_name = extract_exe_name(file_path)
-    create_entry_for_rule(exe_name, file_path, action, direction, prefix)
+    create_entry_for_rule(exe_name, file_path, action, direction, config['prefix'])
     if direction == 'both':
         for direction in ['in', 'out']:
-            rule_name = f'{prefix} {exe_name} {direction} Firewallhausmeister'
+            rule_name = f'{config["prefix"]} {exe_name} {direction} Firewallhausmeister'
             commands = commands + f'netsh advfirewall firewall add rule name="{rule_name}" dir={direction} program="{file_path}" profile=any action={action} && '
         commands = commands[:-4]
     else:
-        rule_name = f'{prefix} {exe_name} {direction} Firewallhausmeister'
+        rule_name = f'{config["prefix"]} {exe_name} {direction} Firewallhausmeister'
         commands = commands + f'netsh advfirewall firewall add rule name="{rule_name}" dir={direction} program="{file_path}" profile=any action={action}\n cmd /c'
 
     return commands
@@ -103,7 +115,7 @@ def _is_exe(path):
     return os.path.isfile(path) and os.access(path, os.X_OK)
 
 def _load_database(check=False):
-    with open('./resources/list_of_rules.csv','r')as f:
+    with open(csv_database,'r')as f:
         database = [line.strip().split(',') for line in f]
     if check:
         for idx,line in enumerate(database):
@@ -112,7 +124,7 @@ def _load_database(check=False):
     return database
 
 def _write_database(database):
-    with open('./resources/list_of_rules.csv','w')as f:
+    with open(csv_database,'w')as f:
         for line in database:
             f.write(f'{line[0]},{line[1]},{line[2]},{line[3]},{line[4]},{line[5]}\n')
 
