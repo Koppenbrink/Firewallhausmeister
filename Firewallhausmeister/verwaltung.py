@@ -15,7 +15,7 @@ class VerwaltungsFenster:
         self.database = _load_database(check=True)
 
         # crate the table:
-        self.root.title('Treeview demo')
+        self.root.title('Regeln')
 
         # define columns
 

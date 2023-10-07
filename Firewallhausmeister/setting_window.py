@@ -1,8 +1,18 @@
 import tkinter as tk
 from config import change_config, load_config
 from PIL import Image, ImageTk
+import sys,os
 
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
 
+    return os.path.join(base_path, relative_path)
+la_creatura = resource_path("timos_mutter.png")
 class SettingsWindow:
     def __init__(self, master):
         self.settings_labels_dict = {}
@@ -62,7 +72,7 @@ class SettingsWindow:
 
         # Knopf TImos mom
         buttonMoM = tk.Button(settings, text='Bild von deiner Mutter!', fg='black',
-                              command=lambda: self.open_image_mom(settings))
+                              command=lambda: open_image_mom(settings))
         buttonMoM.configure(width=20)
         buttonMoM.pack()
 
@@ -75,15 +85,16 @@ class SettingsWindow:
             change_config(key, value)
             self.update_label_in_menu(key, value)
 
-    def open_image_mom(self,master):
-        MutterBild = tk.Toplevel(master)
-        MutterBild.geometry("1080x1184")
 
-        MutterBild.title("La creatura")
+def open_image_mom(root):
+    MutterBild = tk.Toplevel(root)
+    MutterBild.geometry("1080x1184")
+    MutterBild.title("La creatura")
 
-        image_mutter = Image.open('resources/timos_mutter.png')
-        image_mutter = ImageTk.PhotoImage(image_mutter)
 
-        label = tk.Label(MutterBild,image=image_mutter)
-        label.image = image_mutter
-        label.pack()
+    image_mutter = Image.open(resource_path(la_creatura))
+    image_mutter = ImageTk.PhotoImage(image_mutter)
+
+    label = tk.Label(MutterBild,image=image_mutter)
+    label.image = image_mutter
+    label.pack()

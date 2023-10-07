@@ -1,4 +1,6 @@
 from helper import config
+import win32comext.shell.shell as shell
+import subprocess
 import sys,os
 from config import *
 def resource_path(relative_path):
@@ -74,7 +76,6 @@ def set_rule(file_path:str, action:str, direction:str) -> str:
     :param direction: the direction in which the rule should be set up
     :return:
     """
-    import win32comext.shell.shell as shell
     commands = create_command_for_firewall_rule(file_path, action, direction)
     shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c '+commands)
     return True
@@ -109,6 +110,20 @@ def delete_rules(list_of_idxes):
 
     # write new database to file
     _write_database([database[x] for x in range(len(database)) if x not in list_of_idxes])
+
+def profile_switch(profile,action):
+    """
+    :param profile: profile ("domain","private", "public" or "all") to turn on/off
+    :param action: "ON" or "OFF"
+    :return: True if executed without error
+    """
+    command = f'netsh advfirewall set {profile}profile state {action}'
+    shell.ShellExecuteEx(lpVerb='runas', lpFile='cmd.exe', lpParameters='/c ' + command)
+
+def interpreter(line):
+    proc = subprocess.Popen(line, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    out, err = proc.communicate()
+    return out.decode(), err.decode()
 
 def _is_exe(path):
     import os

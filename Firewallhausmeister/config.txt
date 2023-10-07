@@ -1,1 +1,1 @@
-{"direction": "both", "prefix": "ABC"}
+{"direction": "both", "prefix": "AAA"}
