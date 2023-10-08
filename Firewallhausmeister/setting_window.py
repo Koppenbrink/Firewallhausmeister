@@ -2,19 +2,12 @@ import tkinter as tk
 from config import change_config, load_config
 from PIL import Image, ImageTk
 from helper import icon_location
-import sys,os
+from functions import resource_path
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS2
-    except Exception:
-        base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
 la_creatura = resource_path("timos_mutter.png")
 icon = resource_path(icon_location)
+
 class SettingsWindow:
     def __init__(self, master):
         self.settings_labels_dict = {}

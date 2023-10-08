@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-from functions import _load_database, _write_database, delete_rules, resource_path
+from functions import _load_database, delete_rules, resource_path
 from helper import icon_location
 from PIL import ImageTk, Image
 

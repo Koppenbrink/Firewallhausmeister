@@ -132,7 +132,6 @@ def interpreter(line):
     return out.decode(), err.decode()
 
 def _is_exe(path):
-    import os
     return os.path.isfile(path) and os.access(path, os.X_OK)
 
 def _load_database(check=False):

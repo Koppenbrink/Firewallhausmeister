@@ -9,16 +9,7 @@ from config import change_config, load_config
 import os,sys,json
 
 
-def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS2
-    except Exception:
-        base_path = os.path.abspath(".")
 
-    return os.path.join(base_path, relative_path)
-#
 Logo = resource_path("Krause.png")
 icon = resource_path(icon_location)
 
@@ -150,11 +141,20 @@ class MainWindow:
         button_verwaltung.grid(column=0, row=1,pady=5)
         buttonKrause.grid(column=0,row=2,columnspan=2,pady=10)
 
+        to_break = [button_verwaltung, buttonAllow, buttonBlock, buttonSettings, domain_button,
+                    private_button, public_button, all_on_button, all_off_button, label, domain_label,
+                    private_label, public_label]
+
         def open_image_krause(root):
             KrauseBild = tk.Toplevel(root)
             KrauseBild.geometry("600x800")
             KrauseBild.title("Krause")
             KrauseBild.iconbitmap(resource_path(icon))
+            self.watched = True
+            guarded()
+
+            def krause_not_watching(e):
+                self.watched = False
 
             image_krause = Image.open(resource_path(Logo))
             image_krause = ImageTk.PhotoImage(image_krause)
@@ -162,6 +162,28 @@ class MainWindow:
             krause_label = tk.Label(KrauseBild, image=image_krause)
             krause_label.image = image_krause
             krause_label.pack()
+
+            KrauseBild.bind('<Destroy>',krause_not_watching)
+
+        self.watched = True
+
+        def check():
+            if not self.watched:
+                for item in to_break:
+                    item.configure(font="Wingdings")
+            self.root.after(150000, check)
+
+        def guarded():
+            for item in to_break:
+                item.configure(font="TkDefaultFont")
+
+        check()
+
+        def krause_not_watching():
+            self.watched = False
+
+        self.watched = False
+        #self.root.after(1,krause_not_watching())
 
 
     def start(self):
