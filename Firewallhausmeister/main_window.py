@@ -2,7 +2,7 @@ import tkinter as tk
 import tkinter.filedialog
 from PIL import ImageTk, Image
 from functions import *
-from helper import config, version, icon_location
+from helper import config, version, icon_location, csv_location
 from setting_window import *
 from verwaltung import *
 from config import change_config, load_config
@@ -12,6 +12,7 @@ import os,sys,json
 
 Logo = resource_path("Krause.png")
 icon = resource_path(icon_location)
+csv_location = resource_path(csv_location)
 
 # set direct
 class MainWindow:

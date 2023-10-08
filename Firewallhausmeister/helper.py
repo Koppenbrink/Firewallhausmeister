@@ -1,5 +1,6 @@
 from config import load_config
 
 icon_location = "icon.ico"
-version = 3.0
+csv_location = 'list_of_rules.csv'
+version = 3.1
 config = load_config()

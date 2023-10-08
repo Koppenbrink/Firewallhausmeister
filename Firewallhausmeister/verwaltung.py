@@ -4,6 +4,7 @@ from functions import _load_database, delete_rules, resource_path
 from helper import icon_location
 from PIL import ImageTk, Image
 
+icon_path = resource_path(icon_location)
 class VerwaltungsFenster:
     def __init__(self, master):
         self.root = tk.Toplevel(master)
@@ -11,14 +12,12 @@ class VerwaltungsFenster:
         self.root.geometry("600x200")
         self.root.minsize(width=600, height=300)
         self.selected_items = []
-        self.root.iconbitmap(resource_path(icon_location))
+        self.root.iconbitmap(icon_path)
 
         # load list of rules and check:
         self.database = _load_database(check=True)
 
         # crate the table:
-        self.root.title('Regeln')
-
         # define columns
 
         columns = ('exe_name', 'action', 'dir', 'existing','path')

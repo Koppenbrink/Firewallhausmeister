@@ -1,8 +1,16 @@
-from helper import config
+from helper import config, csv_location
 import win32comext.shell.shell as shell
 import subprocess
+from os import path
 import sys,os
 from config import *
+
+'''def resource_path(relative_path):
+    bundle_dir = path.abspath(path.dirname(__file__))
+    path_to_dat = path.join(bundle_dir, relative_path)
+
+    return path_to_dat'''
+
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
     try:
@@ -13,9 +21,8 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-csv_database = resource_path('list_of_rules.csv')
 
-
+csv_database = resource_path(csv_location)
 def get_firewall_status():
     command = f'netsh advfirewall show allprofiles state'
     output = subprocess.check_output(command, text=True)
@@ -132,7 +139,8 @@ def interpreter(line):
     return out.decode(), err.decode()
 
 def _is_exe(path):
-    return os.path.isfile(path) and os.access(path, os.X_OK)
+    last_letters = path[-4:]==".exe"
+    return os.path.isfile(path) and os.access(path, os.X_OK) and last_letters
 
 def _load_database(check=False):
     with open(csv_database,'r')as f:
