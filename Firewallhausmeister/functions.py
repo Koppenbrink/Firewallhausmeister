@@ -15,6 +15,12 @@ def resource_path(relative_path):
 
 csv_database = resource_path('list_of_rules.csv')
 
+
+def get_firewall_status():
+    command = f'netsh advfirewall show allprofiles state'
+    output = subprocess.check_output(command, text=True)
+    return dict(zip(['domain','private','public'],[row.split()[1] for row in output.split("\n") if "State" in row]))
+
 def extract_exe_name(file_path:str) -> str:
     '''
     extracts the name of an exe from a file path

@@ -51,12 +51,7 @@ class MainWindow:
         self.root.iconbitmap(resource_path(icon))
 
         # get firewall status
-        command = f'netsh advfirewall show allprofiles state'
-        output = subprocess.check_output(command,text=True)
-
-
-        firewall_states = [row.split()[1] for row in output.split("\n") if "State" in row]
-
+        firewall_states = get_firewall_status()
 
         # create items for firewall status
 
@@ -79,7 +74,6 @@ class MainWindow:
         public_label.grid(column=0, row=3,pady=5)
 
         # functions for status buttons:
-
         def swap_on_off(x):
             if x == "ON":
                 return "OFF"
@@ -87,46 +81,44 @@ class MainWindow:
                 return "ON"
             return False
 
-        def domain_updater(state):
+        list_of_profiles = ['public','private','public']
+
+        def profile_updater(state,profile,button):
             action = swap_on_off(state)
-            profile_switch("domain",action)
-            domain_button.configure(text=action)
-            firewall_states[0] = action
+            profile_switch(profile,action)
+            button.configure(text=action)
+            firewall_states[profile] = action
+
+        def domain_updater(state):
+            profile_updater(state,'domain',domain_button)
 
         def private_updater(state):
-            action = swap_on_off(state)
-            profile_switch("private", action)
-            private_button.configure(text=action)
-            firewall_states[1] = action
+            profile_updater(state,'private',private_button)
 
         def public_updater(state):
-            action = swap_on_off(state)
-            profile_switch("public",action)
-            public_button.configure(text=action)
-            firewall_states[2] = action
+            profile_updater(state,'public',public_button)
 
         def all_on():
             profile_switch("all","ON")
             domain_button.configure(text="ON")
             private_button.configure(text="ON")
             public_button.configure(text="ON")
-            for i in range(len(firewall_states)):
-                firewall_states[i] = "ON"
+            for profile in list_of_profiles:
+                firewall_states[profile] = "ON"
 
         def all_off():
             profile_switch("all","OFF")
             domain_button.configure(text="OFF")
             private_button.configure(text="OFF")
             public_button.configure(text="OFF")
-            for i in range(len(firewall_states)):
-                firewall_states[i] = "OFF"
-
+            for profile in list_of_profiles:
+                firewall_states[profile] = "OFF"
 
 
         # define buttons
-        domain_button = tk.Button(status_button_frame, text=firewall_states[0], fg='black',command=lambda:domain_updater(firewall_states[0]))
-        private_button = tk.Button(status_button_frame, text=firewall_states[1], fg='black',command=lambda:private_updater(firewall_states[1]))
-        public_button = tk.Button(status_button_frame, text=firewall_states[2], fg='black',command=lambda:public_updater(firewall_states[2]))
+        domain_button = tk.Button(status_button_frame, text=firewall_states['domain'], fg='black',command=lambda:domain_updater(firewall_states['domain']))
+        private_button = tk.Button(status_button_frame, text=firewall_states['private'], fg='black',command=lambda:private_updater(firewall_states['private']))
+        public_button = tk.Button(status_button_frame, text=firewall_states['public'], fg='black',command=lambda:public_updater(firewall_states['public']))
         all_on_button = tk.Button(status_button_frame, text="All ON", fg='black',command=lambda:all_on())
         all_off_button = tk.Button(status_button_frame, text="All OFF", fg='black',command=lambda:all_off())
 
