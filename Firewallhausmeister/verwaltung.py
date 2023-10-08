@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from functions import _load_database, _write_database, delete_rules
+from functions import _load_database, _write_database, delete_rules, resource_path
+from helper import icon_location
 from PIL import ImageTk, Image
 
 class VerwaltungsFenster:
@@ -10,6 +11,7 @@ class VerwaltungsFenster:
         self.root.geometry("600x200")
         self.root.minsize(width=600, height=300)
         self.selected_items = []
+        self.root.iconbitmap(resource_path(icon_location))
 
         # load list of rules and check:
         self.database = _load_database(check=True)

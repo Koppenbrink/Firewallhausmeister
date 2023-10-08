@@ -1,6 +1,7 @@
 import tkinter as tk
 from config import change_config, load_config
 from PIL import Image, ImageTk
+from helper import icon_location
 import sys,os
 
 def resource_path(relative_path):
@@ -13,12 +14,14 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 la_creatura = resource_path("timos_mutter.png")
+icon = resource_path(icon_location)
 class SettingsWindow:
     def __init__(self, master):
         self.settings_labels_dict = {}
         config = load_config()
         settings = tk.Toplevel(master)
         settings.title("Einstellungen")
+        settings.iconbitmap(resource_path(icon))
 
         settings.geometry("200x300")
 
@@ -88,6 +91,7 @@ class SettingsWindow:
 
 def open_image_mom(root):
     MutterBild = tk.Toplevel(root)
+    MutterBild.iconbitmap(resource_path(icon))
     MutterBild.geometry("1080x1184")
     MutterBild.title("La creatura")
 
