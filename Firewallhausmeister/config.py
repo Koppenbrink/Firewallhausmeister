@@ -1,6 +1,6 @@
 import json
-import os
 import os,sys
+from helper import config_location
 
 
 def resource_path(relative_path):
@@ -13,10 +13,10 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-confic_loc = resource_path("config.txt")
+config_loc = resource_path(config_location)
 # functions
 def save_config():
-    json.dump(config, open(confic_loc, 'w'))
+    json.dump(config, open(config_loc, 'w'))
 
 def change_config(key, value):
     config[key] = value
@@ -24,14 +24,9 @@ def change_config(key, value):
 
 # load config
 def load_config():
-    config = json.load(open(confic_loc))
+    config = json.load(open(config_loc))
     return config
 
-def update_button():
-    return
 
 settings_button_dict = {}
 config = load_config()
-
-
-

@@ -1,4 +1,4 @@
-from helper import config, csv_location
+from helper import csv_location
 import win32comext.shell.shell as shell
 import subprocess
 from os import path

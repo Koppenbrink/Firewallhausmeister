@@ -1,13 +1,12 @@
 import tkinter as tk
 import tkinter.filedialog
-from PIL import ImageTk, Image
+#from PIL import ImageTk, Image
 from functions import *
-from helper import config, version, icon_location, csv_location
+from helper import version, icon_location, csv_location
 from setting_window import *
 from verwaltung import *
-from config import change_config, load_config
-import os,sys,json
-
+from config import change_config, load_config, config
+import os
 
 
 Logo = resource_path("Krause.png")
@@ -73,7 +72,7 @@ class MainWindow:
                 return "ON"
             return False
 
-        list_of_profiles = ['public','private','public']
+        list_of_profiles = ['domain','private','public']
 
         def profile_updater(state,profile,button):
             action = swap_on_off(state)
@@ -129,62 +128,35 @@ class MainWindow:
 
         # create buttons
         button_verwaltung = tk.Button(rule_button_frame, text='Verwaltung', fg='black', command=lambda:VerwaltungsFenster(self.root))
-        buttonAllow = tk.Button(rule_button_frame, text='Zulassen', bg='green', fg='black', command=self.allow)
-        buttonBlock = tk.Button(rule_button_frame, text='Blockieren', bg='red', fg='black', command=self.block)
-        buttonSettings = tk.Button(rule_button_frame, text='Einstellungen', fg='black', command=lambda: SettingsWindow(self.root))
-        buttonKrause = tk.Button(rule_button_frame, text='Krause!', fg='black',font=10, command=lambda : open_image_krause(self.root))
+        button_allow = tk.Button(rule_button_frame, text='Zulassen', bg='green', fg='black', command=self.allow)
+        button_block = tk.Button(rule_button_frame, text='Blockieren', bg='red', fg='black', command=self.block)
+        button_settings = tk.Button(rule_button_frame, text='Einstellungen', fg='black', command=lambda: SettingsWindow(self.root))
+        button_krause = tk.Button(rule_button_frame, text='Krause!', fg='black',font=10, command=lambda : open_image_krause(self.root))
 
         # place buttons
 
-        buttonAllow.grid(column=0,row=0, pady=5)
-        buttonBlock.grid(column=1,row=0,pady=5)
-        buttonSettings.grid(column=1,row=1,pady=5)
+        button_allow.grid(column=0,row=0, pady=5)
+        button_block.grid(column=1,row=0,pady=5)
+        button_settings.grid(column=1,row=1,pady=5)
         button_verwaltung.grid(column=0, row=1,pady=5)
-        buttonKrause.grid(column=0,row=2,columnspan=2,pady=10)
+        button_krause.grid(column=0,row=2,columnspan=2,pady=10)
 
-        to_break = [button_verwaltung, buttonAllow, buttonBlock, buttonSettings, domain_button,
+        to_break = [button_verwaltung, button_allow, button_block, button_settings, domain_button,
                     private_button, public_button, all_on_button, all_off_button, label, domain_label,
                     private_label, public_label]
 
         def open_image_krause(root):
-            KrauseBild = tk.Toplevel(root)
-            KrauseBild.geometry("600x800")
-            KrauseBild.title("Krause")
-            KrauseBild.iconbitmap(resource_path(icon))
-            self.watched = True
-            guarded()
-
-            def krause_not_watching(e):
-                self.watched = False
+            krause_bild = tk.Toplevel(root)
+            krause_bild.geometry("600x800")
+            krause_bild.title("Krause")
+            krause_bild.iconbitmap(resource_path(icon))
 
             image_krause = Image.open(resource_path(Logo))
             image_krause = ImageTk.PhotoImage(image_krause)
 
-            krause_label = tk.Label(KrauseBild, image=image_krause)
+            krause_label = tk.Label(krause_bild, image=image_krause)
             krause_label.image = image_krause
             krause_label.pack()
-
-            KrauseBild.bind('<Destroy>',krause_not_watching)
-
-        self.watched = True
-
-        def check():
-            if not self.watched:
-                for item in to_break:
-                    item.configure(font="Wingdings")
-            self.root.after(150000, check)
-
-        def guarded():
-            for item in to_break:
-                item.configure(font="TkDefaultFont")
-
-        check()
-
-        def krause_not_watching():
-            self.watched = False
-
-        self.watched = False
-        #self.root.after(1,krause_not_watching())
 
 
     def start(self):
