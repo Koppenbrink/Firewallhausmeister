@@ -141,9 +141,6 @@ class MainWindow:
         button_verwaltung.grid(column=0, row=1,pady=5)
         button_krause.grid(column=0,row=2,columnspan=2,pady=10)
 
-        to_break = [button_verwaltung, button_allow, button_block, button_settings, domain_button,
-                    private_button, public_button, all_on_button, all_off_button, label, domain_label,
-                    private_label, public_label]
 
         def open_image_krause(root):
             krause_bild = tk.Toplevel(root)
